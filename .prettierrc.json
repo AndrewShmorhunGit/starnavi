@@ -1,0 +1,25 @@
+{
+    "semi": true,
+    "tabWidth": 4,
+    "printWidth": 120,
+    "singleQuote": false,
+    "trailingComma": "none",
+    "endOfLine": "crlf",
+    "arrowParens": "always",
+    "importOrder": [
+        "^react",
+        "^date-fns",
+        "^lodash/(.*)",
+        "^recharts",
+        "^date-fns/(.*)",
+        "^formik",
+        "^zod",
+        "^styled-components/(.*)",
+        "^@mui/(.*)$",
+        "^@i18n$",
+        "^[./]"
+    ],
+    "importOrderSeparation": true,
+    "importOrderSortSpecifiers": true,
+    "importOrderGroupNamespaceSpecifiers": true
+}
