@@ -17,7 +17,7 @@ import { getMappedColor, validateField } from "@utils/functions/validation/heroe
 import { HeroGraph } from "@components/Tables/Graphs/HeroGraph";
 import { ButtonCell, ColorMarker, HeaderCell, HeroCell, TablePaper } from "./StyledHeroTable";
 import { TABLE_HEADERS } from "@utils/constants/hero.table.constants";
-import { useFetchHeroesQuery } from "../../api/api.slice";
+import { useFetchHeroesQuery } from "@api/api.slice";
 
 // Responsive table component for displaying heroes
 export const HeroTable: React.FC = () => {

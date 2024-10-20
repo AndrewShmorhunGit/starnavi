@@ -11,13 +11,21 @@ export function FilmNode({ filmId }: FilmNodeProps) {
     const { data: film, error, isLoading } = useFetchFilmQuery(filmId);
 
     if (isLoading) {
-        return <CircularProgress size={24} />;
+        return <CircularProgress size={24} data-testid="loading-spinner" />;
     }
     if (!film) {
-        return <Box style={{ color: "red" }}>No data!</Box>;
+        return (
+            <Box style={{ color: "red" }} data-testid="no-data">
+                No data!
+            </Box>
+        );
     }
     if (error) {
-        return <Box style={{ color: "red" }}>Error: Failed to fetch film data</Box>;
+        return (
+            <Box style={{ color: "red" }} data-testid="error-message">
+                Error: Failed to fetch film data
+            </Box>
+        );
     }
 
     return (
@@ -33,15 +41,16 @@ export function FilmNode({ filmId }: FilmNodeProps) {
                 flexDirection: "column",
                 gap: 0.5
             })}
+            data-testid="film-node"
         >
-            <Body1Typography>{film.title}</Body1Typography>
-            <Subtitle1Typography align="left">
+            <Body1Typography data-testid="film-title">{film.title}</Body1Typography>
+            <Subtitle1Typography align="left" data-testid="film-episode">
                 <strong>Episode:</strong> {film.episode_id}
             </Subtitle1Typography>
-            <Subtitle1Typography align="left">
+            <Subtitle1Typography align="left" data-testid="film-director">
                 <strong>Director:</strong> {film.director}
             </Subtitle1Typography>
-            <Subtitle1Typography align="left">
+            <Subtitle1Typography align="left" data-testid="film-release-date">
                 <strong>Release Date:</strong> {film.release_date}
             </Subtitle1Typography>
         </Box>

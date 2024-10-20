@@ -1,5 +1,6 @@
 {
     "compilerOptions": {
+        "types": ["@vitest/browser/providers/playwright"],
         "target": "ESNext",
         "downlevelIteration": true,
         "useDefineForClassFields": true,
@@ -35,6 +36,5 @@
         }
     },
 
-    "include": ["src", "vite.config.ts"]
+    "include": ["src", "vite.config.ts", "test"]
 }
-
