@@ -7,6 +7,7 @@ export const ColorMarker = styled(Box)<{ color: string }>`
     margin-left: 8px;
     background-color: ${({ color }) => color};
     border-radius: 50%;
+    border: 1px solid ${({ theme }) => theme.palette.text.primary};
 `;
 
 export const TablePaper = styled(Paper)(({ theme }) => ({

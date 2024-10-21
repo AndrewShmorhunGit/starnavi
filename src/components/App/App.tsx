@@ -6,6 +6,7 @@ import { CookieDialog } from "@components/Dialogs/CookieDialog";
 import { PageHeader } from "@components/Headers/PageHeader";
 import { StarrySky } from "@components/Theme/StarrySky";
 import { HeroTable } from "@components/Tables/HeroTable";
+import { Footer } from "@components/Footer/Footer";
 
 export function App(): React.ReactNode {
     const theme = useTheme();
@@ -15,6 +16,7 @@ export function App(): React.ReactNode {
             <PageWrapper>
                 <PageHeader />
                 <HeroTable />
+                <Footer />
             </PageWrapper>
             <CookieDialog />
         </PageContainer>

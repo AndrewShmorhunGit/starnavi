@@ -61,7 +61,7 @@ export const HeroTable: React.FC = () => {
         <TablePaper>
             <TableContainer>
                 <Table>
-                    {renderTableHeader(TABLE_HEADERS, isMobile)} {/* Render table header */}
+                    {renderTableHeader(TABLE_HEADERS(isMobile))} {/* Render table header */}
                     <TableBody>
                         {data.results.map((hero: THero) => renderTableRow(hero, handleListItemClick, isMobile))}
                     </TableBody>
@@ -129,19 +129,12 @@ const renderColorMarkers = (colors: string, isEyeColor = false) => {
 };
 
 // Function to render the table header
-const renderTableHeader = (headers: string[], isMobile: boolean) => (
+const renderTableHeader = (headers: string[]) => (
     <TableHead>
         <TableRow>
-            {!isMobile && (
-                <>
-                    <HeaderCell>Height, cm</HeaderCell> {/* Header for height */}
-                    <HeaderCell>Mass, kg</HeaderCell> {/* Header for mass */}
-                </>
-            )}
             {headers.map((header, index) => (
                 <HeaderCell key={index}>{header}</HeaderCell> // Render each header cell
             ))}
-            {/* Optionally hide Height and Mass headers in mobile view */}
         </TableRow>
     </TableHead>
 );

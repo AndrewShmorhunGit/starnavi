@@ -2,9 +2,9 @@ name: deploy web
 
 on:
     push:
-        branches: [features/pipeline]
+        branches: [prod]
     pull_request:
-        branches: [features/pipeline]
+        branches: [prod]
 
 jobs:
     deploy:
@@ -21,6 +21,9 @@ jobs:
 
             - name: Install dependencies
               run: npm install
+
+            - name: Run Tests
+              run: npm test
 
             - name: Build Website
               run: npm run build
