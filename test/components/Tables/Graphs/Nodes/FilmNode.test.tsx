@@ -4,40 +4,16 @@ import { AppProvider } from "@components/App/AppProvider";
 import { FilmNode } from "@components/Tables/Graphs/Nodes/FilmNode";
 import { useFetchFilmQuery } from "@api/api.slice";
 
-// Определяем тип возвращаемого значения хука
-type FilmData = {
-    title: string;
-    episode_id: number;
-    director: string;
-    release_date: string;
-};
+type FetchFilmQueryReturnType = ReturnType<typeof useFetchFilmQuery>;
 
-type UseFetchFilmQueryReturnType = {
-    data?: FilmData | null;
-    isLoading: boolean;
-    error?: { message: string }; // Уточняем тип ошибки
-    status: string;
-    isFetching: boolean;
-    isSuccess: boolean;
-    isError: boolean;
-    isUninitialized: boolean;
-    refetch: () => void;
-};
-
-// Создание мока для useFetchFilmQuery
-const useMockFetchFilmQuery = vi.fn() as Mock<() => UseFetchFilmQueryReturnType>;
-
-vi.mock("../../../../../src/api/api.slice", () => ({
-    useFetchFilmQuery: useMockFetchFilmQuery // Используем наш мок
-}));
+const useMockFetchFilmQuery = vi.fn() as Mock<() => FetchFilmQueryReturnType>;
 
 describe("FilmNode Component", () => {
     afterEach(() => {
-        vi.restoreAllMocks(); // Восстанавливаем моки после каждого теста
+        vi.restoreAllMocks(); // Restore mocks after each test
     });
 
-    test("renders loading state", () => {
-        // Мок реализации для состояния загрузки
+    test("renders loading state and ensures no film data or error", () => {
         useMockFetchFilmQuery.mockReturnValue({
             isLoading: true,
             status: "loading",
@@ -45,7 +21,7 @@ describe("FilmNode Component", () => {
             isSuccess: false,
             isError: false,
             isUninitialized: false,
-            refetch: vi.fn() // Добавляем метод refetch
+            refetch: vi.fn() // Mock refetch function
         });
 
         const { getByTestId } = render(
@@ -54,13 +30,17 @@ describe("FilmNode Component", () => {
             </AppProvider>
         );
 
-        // Проверка на наличие спиннера загрузки
+        // Check for loading spinner
         const loadingSpinner = getByTestId("loading-spinner");
         expect(loadingSpinner).toBeTruthy();
+
+        // Ensure no error or film data is rendered
+        expect(getByTestId("error-message")).not.toBe(HTMLElement);
+        expect(getByTestId("film-node")).not.toBe(HTMLElement);
+        expect(getByTestId("no-data")).not.toBe(HTMLElement);
     });
 
-    test("renders error state", () => {
-        // Мок реализации для состояния ошибки
+    test("renders error state and ensures no film data or loading spinner", () => {
         useMockFetchFilmQuery.mockReturnValue({
             error: { message: "Failed to fetch film data" },
             isLoading: false,
@@ -71,18 +51,23 @@ describe("FilmNode Component", () => {
             refetch: vi.fn()
         });
 
-        const { getByTestId } = render(
+        const { getByTestId, getByText } = render(
             <AppProvider>
                 <FilmNode filmId={1} />
             </AppProvider>
         );
 
-        // Проверка на наличие сообщения об ошибке
-        expect(getByTestId("error-message")).toHaveTextContent("Error: Failed to fetch film data");
+        // Check for error message
+        expect(getByTestId("error-message")).toBeTruthy();
+        expect(getByText("Error: Failed to fetch film data")).toBeTruthy();
+
+        // Ensure no film data or loading spinner is rendered
+        expect(getByTestId("film-node")).not.toBe(HTMLElement);
+        expect(getByTestId("loading-spinner")).not.toBe(HTMLElement);
+        expect(getByTestId("no-data")).not.toBe(HTMLElement);
     });
 
-    test("renders no data state", () => {
-        // Мок реализации для состояния без данных
+    test("renders no data state and ensures no error or loading spinner", () => {
         useMockFetchFilmQuery.mockReturnValue({
             data: null,
             isLoading: false,
@@ -94,19 +79,24 @@ describe("FilmNode Component", () => {
             refetch: vi.fn()
         });
 
-        const { getByTestId } = render(
+        const { getByTestId, getByText } = render(
             <AppProvider>
                 <FilmNode filmId={1} />
             </AppProvider>
         );
 
-        // Проверка на наличие сообщения о том, что данных нет
-        expect(getByTestId("no-data")).toHaveTextContent("No data!");
+        // Check for "no data" message
+        expect(getByTestId("no-data")).toBeTruthy();
+        expect(getByText("No data!")).toBeTruthy();
+
+        // Ensure no film data, error, or loading spinner is rendered
+        expect(getByTestId("film-node")).not.toBe(HTMLElement);
+        expect(getByTestId("error-message")).not.toBe(HTMLElement);
+        expect(getByTestId("loading-spinner")).not.toBe(HTMLElement);
     });
 
-    test("renders film data correctly", () => {
-        // Мок реализации, возвращающей данные о фильме
-        const mockFilm: FilmData = {
+    test("renders film data correctly and ensures no loading spinner or error", () => {
+        const mockFilm = {
             title: "A New Hope",
             episode_id: 4,
             director: "George Lucas",
@@ -125,16 +115,25 @@ describe("FilmNode Component", () => {
             refetch: vi.fn()
         });
 
-        const { getByTestId } = render(
+        const { getByTestId, getByText } = render(
             <AppProvider>
                 <FilmNode filmId={1} />
             </AppProvider>
         );
 
-        // Проверка, что детали фильма отрендерены
-        expect(getByTestId("film-title")).toHaveTextContent("A New Hope");
-        expect(getByTestId("film-episode")).toHaveTextContent("Episode: 4");
-        expect(getByTestId("film-director")).toHaveTextContent("Director: George Lucas");
-        expect(getByTestId("film-release-date")).toHaveTextContent("Release Date: 1977-05-25");
+        // Check for film data
+        expect(getByTestId("film-title")).toBeTruthy();
+        expect(getByText("A New Hope")).toBeTruthy();
+        expect(getByTestId("film-episode")).toBeTruthy();
+        expect(getByText("Episode: 4")).toBeTruthy();
+        expect(getByTestId("film-director")).toBeTruthy();
+        expect(getByText("Director: George Lucas")).toBeTruthy();
+        expect(getByTestId("film-release-date")).toBeTruthy();
+        expect(getByText("Release Date: 1977-05-25")).toBeTruthy();
+
+        // Ensure no loading spinner, error, or "no data" message is rendered
+        expect(getByTestId("loading-spinner")).not.toBe(HTMLElement);
+        expect(getByTestId("error-message")).not.toBe(HTMLElement);
+        expect(getByTestId("no-data")).not.toBe(HTMLElement);
     });
 });

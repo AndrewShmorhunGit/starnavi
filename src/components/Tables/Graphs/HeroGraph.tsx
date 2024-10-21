@@ -7,7 +7,7 @@ import { StarshipNode } from "./Nodes/StarshipNode";
 import { useFetchFilmQuery } from "@api/api.slice";
 
 import "reactflow/dist/style.css";
-import { Box, Theme, useTheme } from "@mui/material";
+import { Box, useTheme } from "@mui/material";
 
 interface HeroGraphProps {
     hero: THero; // Hero type containing the hero's data
