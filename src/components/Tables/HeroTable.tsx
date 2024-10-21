@@ -9,7 +9,8 @@ import {
     ListItemButton,
     Dialog,
     DialogContent,
-    DialogTitle
+    DialogTitle,
+    IconButton
 } from "@mui/material";
 import { THero } from "@utils/types/types";
 import { FullScreenLoader } from "@components/Loaders/FullScreenLoader";
@@ -18,6 +19,7 @@ import { HeroGraph } from "@components/Tables/Graphs/HeroGraph";
 import { ButtonCell, ColorMarker, HeaderCell, HeroCell, TablePaper } from "./StyledHeroTable";
 import { TABLE_HEADERS } from "@utils/constants/hero.table.constants";
 import { useFetchHeroesQuery } from "@api/api.slice";
+import CloseIcon from "@mui/icons-material/Close";
 
 // Responsive table component for displaying heroes
 export const HeroTable: React.FC = () => {
@@ -59,7 +61,7 @@ export const HeroTable: React.FC = () => {
 
     return (
         <TablePaper>
-            <TableContainer>
+            <TableContainer sx={{ minHeight: "50vh" }}>
                 <Table>
                     {renderTableHeader(TABLE_HEADERS(isMobile))} {/* Render table header */}
                     <TableBody>
@@ -79,7 +81,18 @@ export const HeroTable: React.FC = () => {
             {/* Dialog to show hero details */}
             {selectedHero && (
                 <Dialog open={Boolean(selectedHero)} onClose={handleCloseDialog} maxWidth="lg" fullWidth>
-                    <DialogTitle>{selectedHero.name}</DialogTitle>
+                    <IconButton
+                        children={<CloseIcon />}
+                        aria-label="close"
+                        onClick={handleCloseDialog}
+                        sx={{
+                            position: "absolute",
+                            right: 2,
+                            top: 2,
+                            color: (theme) => theme.palette.grey[500]
+                        }}
+                    />
+
                     <DialogContent>
                         <HeroGraph hero={selectedHero} /> {/* Render hero graph */}
                     </DialogContent>
@@ -133,7 +146,9 @@ const renderTableHeader = (headers: string[]) => (
     <TableHead>
         <TableRow>
             {headers.map((header, index) => (
-                <HeaderCell key={index}>{header}</HeaderCell> // Render each header cell
+                <HeaderCell key={index} sx={index === 0 ? { borderLeft: "none" } : {}}>
+                    {header}
+                </HeaderCell> // Render each header cell
             ))}
         </TableRow>
     </TableHead>

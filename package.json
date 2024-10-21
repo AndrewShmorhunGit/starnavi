@@ -7,6 +7,7 @@
         "dev": "vite",
         "build": "tsc -b && vite build",
         "test": "vitest",
+        "test:headless": "vitest --browser.enabled=true --browser.provider=playwright --browser.headless=true",
         "coverage": "vitest run --coverage",
         "lint": "eslint .",
         "preview": "vite preview"
