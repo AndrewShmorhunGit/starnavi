@@ -25,3 +25,22 @@ dist-ssr
 
 # Tests
 coverage
+
+# Terraform state files and backups
+*.tfstate
+*.tfstate.backup
+
+# Terraform
+crash.log
+.terraform.lock.hcl
+.terraform/
+**/.terraformrc
+**/terraform.rc
+**/.terraform/environment
+
+# Terraform variable files
+terraform.tfvars
+
+# Environment
+.env
+*.env
