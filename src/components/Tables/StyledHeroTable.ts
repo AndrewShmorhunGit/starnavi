@@ -29,6 +29,5 @@ export const HeroCell = styled(TableCell)`
 
 export const ButtonCell = styled(TableCell)`
     padding: 0;
-    border-right: 1px solid ${({ theme }) => theme.palette.divider};
     text-align: center;
 `;

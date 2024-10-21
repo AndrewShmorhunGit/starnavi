@@ -1,5 +1,5 @@
 import { THero } from "@utils/types/types";
-import React from "react";
+import React, { useEffect } from "react";
 import ReactFlow, { MiniMap, Controls, Background, Edge, Node } from "reactflow";
 import { HeroNode } from "./Nodes/HeroNode";
 import { FilmNode } from "./Nodes/FilmNode";
@@ -15,6 +15,14 @@ interface HeroGraphProps {
 
 export const HeroGraph: React.FC<HeroGraphProps> = ({ hero }) => {
     const theme = useTheme();
+
+    useEffect(() => {
+        const attributionElement = document.querySelector(".react-flow__attribution");
+        if (attributionElement) {
+            attributionElement.setAttribute("style", "display: none");
+        }
+    }, []);
+
     const nodes: Node[] = [
         // Main node for the hero
         {
@@ -73,11 +81,15 @@ export const HeroGraph: React.FC<HeroGraphProps> = ({ hero }) => {
     });
 
     return (
-        <Box style={{ height: "600px" }}>
+        <Box style={{ height: "80vh" }}>
             <ReactFlow nodes={nodes} edges={edges}>
                 <MiniMap style={{ background: theme.palette.background.paper }} />
-                <Controls style={{ background: "red" }} />
-                <Background />
+                <Controls style={{ fill: theme.palette.primary.main, left: "0", bottom: 5 }} />
+                <Background
+                    gap={32}
+                    size={3}
+                    // color={theme.palette.divider}
+                />
             </ReactFlow>
         </Box>
     );

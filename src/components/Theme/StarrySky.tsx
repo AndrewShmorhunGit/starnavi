@@ -11,11 +11,11 @@ const moveDiagonal = keyframes`
 `;
 
 const StarrySkyContainer = styled(Box)(({ theme }) => ({
-    position: "absolute",
+    position: "fixed",
     top: 0,
     left: 0,
-    width: "100%",
-    height: "100%",
+    width: "100vw",
+    height: "100vh",
     overflow: "hidden",
     zIndex: -1,
     backgroundColor: theme.palette.mode === "dark" ? "#000000" : "#FFFFFF"
