@@ -21,7 +21,6 @@ const INITIAL_THEME_MODE = (getLocalStorageItem(STORAGE_THEME_MODE_VARIABLE) as 
 
 const ThemeContext = createContext<ThemeModeContextType>({
     themeMode: INITIAL_THEME_MODE,
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
     setThemeMode: () => {},
     theme: createTheme(MUI_THEMES[INITIAL_THEME_MODE], enUS)
 });
