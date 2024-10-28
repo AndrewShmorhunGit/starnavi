@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Pagination as MuiPagination, Input, Button } from "@mui/material";
+import { Pagination as MuiPagination, Input } from "@mui/material";
 import { FlexBox } from "@styles/StyledComponents/FlexBoxes";
 import { SecondaryButton } from "@components/Buttons/SecondaryButton";
 
