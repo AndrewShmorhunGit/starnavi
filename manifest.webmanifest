@@ -1,0 +1,9 @@
+{
+    "name": "Shmorhun Starnavi Table",
+    "short_name": "SST",
+    "theme_color": "#FF6F00",
+    "background_color": "#000000",
+    "display": "standalone",
+    "scope": "/",
+    "start_url": "/"
+}
