@@ -41,7 +41,6 @@ export const HeroNode: React.FC<HeroNodeProps> = ({ hero }) => {
                     alt={hero.name}
                 />
             </Box>
-
             {/* Column for hero's information */}
             <Box display="flex" flexDirection="column" gap={"1rem"}>
                 <Body2Typography>{hero.name}</Body2Typography>

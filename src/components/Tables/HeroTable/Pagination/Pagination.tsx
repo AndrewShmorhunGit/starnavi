@@ -18,7 +18,11 @@ export function Pagination({
     const totalPages = Math.ceil(count / rowsPerPage);
 
     const handlePageInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setInputPage(e.target.value);
+        const value = e.target.value;
+        const numericValue = Number(value);
+        if (numericValue >= 0 || value === "") {
+            setInputPage(value);
+        }
     };
 
     const handlePageInputSubmit = (e: React.FormEvent) => {
@@ -51,12 +55,13 @@ export function Pagination({
             />
             <FlexBox sx={{ gap: 2, alignItems: "center" }}>
                 <form onSubmit={handlePageInputSubmit}>
-                    <FlexBox sx={{ gap: 2 }}>
+                    <FlexBox sx={{ gap: 2 }} width={"196px"}>
                         <Input
                             type="number"
                             value={inputPage}
                             onChange={handlePageInputChange}
                             placeholder="Go to page"
+                            size="small"
                             // min={1}
                             // max={totalPages}
                         />
