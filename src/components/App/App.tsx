@@ -5,7 +5,7 @@ import { PageContainer, PageWrapper } from "@styles/StyledComponents/Containers"
 import { CookieDialog } from "@components/Dialogs/CookieDialog";
 import { PageHeader } from "@components/Headers/PageHeader";
 import { StarrySky } from "@components/Theme/StarrySky";
-import { HeroTable } from "@components/Tables/HeroTable";
+import { HeroTable } from "@components/Tables/HeroTable/HeroTable";
 import { Footer } from "@components/Footer/Footer";
 
 export function App(): React.ReactNode {
@@ -13,12 +13,12 @@ export function App(): React.ReactNode {
     return (
         <PageContainer>
             {theme.palette.mode === "dark" && <StarrySky />}
+            <PageHeader />
             <PageWrapper>
-                <PageHeader />
                 <HeroTable />
-                <Footer />
             </PageWrapper>
             <CookieDialog />
+            <Footer />
         </PageContainer>
     );
 }

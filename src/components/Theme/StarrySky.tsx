@@ -28,8 +28,7 @@ const BackgroundStars = styled("div")(({ theme }) => ({
     width: "100%",
     height: "100%",
     backgroundImage: `url("https://script-tutorials.com/demos/360/images/stars.png")`,
-    backgroundSize: "cover",
-    "data-testid": "background-stars"
+    backgroundSize: "cover"
 }));
 
 const TwinklingOverlay = styled("div")(({ theme }) => ({
@@ -40,15 +39,14 @@ const TwinklingOverlay = styled("div")(({ theme }) => ({
     height: "300%",
     backgroundImage: `url("https://script-tutorials.com/demos/360/images/twinkling.png")`,
     backgroundRepeat: "repeat",
-    animation: `${moveDiagonal} 300s linear infinite`,
-    "data-testid": "twinkling-overlay"
+    animation: `${moveDiagonal} 300s linear infinite`
 }));
 
 export const StarrySky: React.FC = () => {
     return (
         <StarrySkyContainer>
-            <BackgroundStars />
-            <TwinklingOverlay />
+            <BackgroundStars data-testid="background-stars" />
+            <TwinklingOverlay data-testid="twinkling-overlay" />
         </StarrySkyContainer>
     );
 };

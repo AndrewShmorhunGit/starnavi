@@ -19,5 +19,8 @@ export const EYE_COLOR_MAP: Record<string, string> = {
     blue: "#0000ff",
     black: "#000000",
     red: "#ff0000",
-    yellow: "#ffff00"
+    yellow: "#ffff00",
+    pink: "pink",
+    white: "#fff",
+    gold: "gold"
 };

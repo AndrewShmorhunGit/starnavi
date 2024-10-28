@@ -4,7 +4,21 @@ import { defineConfig } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
 
 export default defineConfig({
-    plugins: [react(), VitePWA()],
+    plugins: [
+        react(),
+        VitePWA({
+            manifest: {
+                name: "Shmorhun Starnavi Table",
+                short_name: "SST",
+                theme_color: "#FF6F00",
+                background_color: "#000000",
+                display: "standalone",
+                scope: "/",
+                start_url: "/",
+                icons: []
+            }
+        })
+    ],
     resolve: {
         alias: {
             "@": path.resolve(__dirname, "./src"),
@@ -20,7 +34,17 @@ export default defineConfig({
         }
     },
     build: {
-        outDir: path.resolve(__dirname, "./dist")
+        outDir: path.resolve(__dirname, "./dist"),
+        chunkSizeWarningLimit: 1000,
+        rollupOptions: {
+            output: {
+                manualChunks(id) {
+                    if (id.includes("node_modules")) {
+                        return "vendor";
+                    }
+                }
+            }
+        }
     },
     preview: {
         port: 3000,

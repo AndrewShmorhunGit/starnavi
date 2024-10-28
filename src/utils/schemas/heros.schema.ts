@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const heroSchema = z.object({
+export const HeroSchema = z.object({
     id: z.number(),
     name: z.string(),
     height: z.string(),
@@ -11,9 +11,9 @@ export const heroSchema = z.object({
     starships: z.array(z.number())
 });
 
-export const peopleResSchema = z.object({
+export const ApiResponseHeroesSchema = z.object({
     count: z.number(),
     next: z.union([z.string(), z.null()]),
     previous: z.union([z.string(), z.null()]).optional(),
-    results: z.array(heroSchema)
+    results: z.array(HeroSchema)
 });
