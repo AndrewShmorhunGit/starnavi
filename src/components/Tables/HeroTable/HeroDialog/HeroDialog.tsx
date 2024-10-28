@@ -1,8 +1,8 @@
 import React from "react";
-import { Dialog, DialogContent, DialogTitle, IconButton } from "@mui/material";
+import { Dialog, DialogContent, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { HeroGraph } from "@components/Tables/Graphs/HeroGraph";
 import { THero } from "@utils/types/types";
+import { HeroGraph } from "@components/Graphs/HeroGraph";
 
 export function HeroDialog({
     selectedHero,
@@ -15,7 +15,7 @@ export function HeroDialog({
 
     return (
         <Dialog open={Boolean(selectedHero)} onClose={handleCloseDialog} maxWidth="lg" fullWidth>
-            <DialogTitle>Hero Details</DialogTitle>
+            {/* <DialogTitle>Hero Details</DialogTitle> */}
             <IconButton
                 aria-label="close"
                 onClick={handleCloseDialog}

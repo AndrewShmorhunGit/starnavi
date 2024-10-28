@@ -3,7 +3,7 @@ import { Table, TableBody, TableContainer } from "@mui/material";
 import { THero } from "@utils/types/types";
 import { FullScreenLoader } from "@components/Loaders/FullScreenLoader";
 import { TablePaper } from "./StyledHeroTable";
-import { useFetchHeroesQuery } from "@api/api.slice";
+import { useFetchHeroesQuery } from "@store/api/api.slice";
 import { TableHeader } from "./TableHeader/TableHeader";
 import { TableRowComponent } from "./TableRow/TableRow";
 import { Pagination } from "./Pagination/Pagination";

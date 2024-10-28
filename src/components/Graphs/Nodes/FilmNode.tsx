@@ -1,32 +1,33 @@
 import React from "react";
 import { Box, CircularProgress } from "@mui/material";
 import { Body1Typography, Subtitle1Typography } from "@components/Typography/Typography";
-import { useFetchFilmQuery } from "@api/api.slice";
+import { TFilm } from "@utils/types/types";
 
 interface FilmNodeProps {
-    filmId: number;
+    // filmId: number;
+    film: TFilm;
 }
 
-export function FilmNode({ filmId }: FilmNodeProps) {
-    const { data: film, error, isLoading } = useFetchFilmQuery(filmId);
+export function FilmNode({ film }: FilmNodeProps) {
+    // const { data: film, error, isLoading } = useFetchFilmQuery(filmId);
 
-    if (isLoading) {
-        return <CircularProgress size={24} data-testid="loading-spinner" />;
-    }
-    if (!film) {
-        return (
-            <Box style={{ color: "red" }} data-testid="no-data">
-                No data!
-            </Box>
-        );
-    }
-    if (error) {
-        return (
-            <Box style={{ color: "red" }} data-testid="error-message">
-                Error: Failed to fetch film data
-            </Box>
-        );
-    }
+    // if (isLoading) {
+    //     return <CircularProgress size={24} data-testid="loading-spinner" />;
+    // }
+    // if (!film) {
+    //     return (
+    //         <Box style={{ color: "red" }} data-testid="no-data">
+    //             No data!
+    //         </Box>
+    //     );
+    // }
+    // if (error) {
+    //     return (
+    //         <Box style={{ color: "red" }} data-testid="error-message">
+    //             Error: Failed to fetch film data
+    //         </Box>
+    //     );
+    // }
 
     return (
         <Box

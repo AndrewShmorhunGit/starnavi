@@ -1,33 +1,34 @@
 import React from "react";
-import { Box, CircularProgress } from "@mui/material";
+import { Box } from "@mui/material";
 import { Body1Typography, Subtitle1Typography } from "@components/Typography/Typography";
-import { useFetchStarshipQuery } from "@api/api.slice";
+import { TStarship } from "@utils/types/types";
 
 interface StarshipNodeProps {
-    starshipId: number; // Starship ID
+    // starshipId: number; // Starship ID
+    starship: TStarship;
 }
 
-export function StarshipNode({ starshipId }: StarshipNodeProps) {
+export function StarshipNode({ starship }: StarshipNodeProps) {
     // Fetch starship data based on starshipId
-    const { data: starship, error, isLoading } = useFetchStarshipQuery(starshipId);
+    // const { data: starship, error, isLoading } = useFetchStarshipQuery(starshipId);
 
-    if (isLoading) {
-        return <CircularProgress data-testid="loading-spinner" size={24} />; // Show loading indicator
-    }
-    if (!starship) {
-        return (
-            <Box data-testid="no-data" style={{ color: "red" }}>
-                No data!
-            </Box>
-        ); // Handle no data case
-    }
-    if (error) {
-        return (
-            <Box data-testid="error-message" style={{ color: "red" }}>
-                Error: Failed to fetch starship data
-            </Box>
-        ); // Handle error case
-    }
+    // if (isLoading) {
+    //     return <CircularProgress data-testid="loading-spinner" size={24} />; // Show loading indicator
+    // }
+    // if (!starship) {
+    //     return (
+    //         <Box data-testid="no-data" style={{ color: "red" }}>
+    //             No data!
+    //         </Box>
+    //     ); // Handle no data case
+    // }
+    // if (error) {
+    //     return (
+    //         <Box data-testid="error-message" style={{ color: "red" }}>
+    //             Error: Failed to fetch starship data
+    //         </Box>
+    //     ); // Handle error case
+    // }
 
     return (
         <Box

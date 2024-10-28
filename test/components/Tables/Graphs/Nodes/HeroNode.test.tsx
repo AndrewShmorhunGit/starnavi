@@ -1,7 +1,7 @@
 import { render } from "vitest-browser-react";
 import { expect, test, vi, afterEach, describe } from "vitest";
 import { AppProvider } from "@components/App/AppProvider";
-import { HeroNode } from "@components/Tables/Graphs/Nodes/HeroNode";
+import { HeroNode } from "@components/Graphs/Nodes/HeroNode";
 import { THero } from "@utils/types/types";
 
 describe("HeroNode Component", () => {

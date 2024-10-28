@@ -1,22 +1,30 @@
 import { z } from "zod";
 
-export const starshipSchema = z.object({
-    MGLT: z.string(),
+export const StarshipSchema = z.object({
+    id: z.number(),
+    name: z.string(),
+    model: z.string(),
+    manufacturer: z.string(),
+    cost_in_credits: z.string(),
+    length: z.string(),
+    max_atmosphering_speed: z.string(),
+    crew: z.string(),
+    passengers: z.string(),
     cargo_capacity: z.string(),
     consumables: z.string(),
-    cost_in_credits: z.string(),
-    created: z.string(),
-    crew: z.string(),
-    edited: z.string(),
     hyperdrive_rating: z.string(),
-    length: z.string(),
-    manufacturer: z.string(),
-    max_atmosphering_speed: z.string(),
-    model: z.string(),
-    name: z.string(),
-    passengers: z.string(),
-    films: z.array(z.number()),
-    pilots: z.array(z.number()).default([]),
+    MGLT: z.string(),
     starship_class: z.string(),
+    pilots: z.array(z.number()).default([]),
+    films: z.array(z.number()),
+    created: z.string().datetime(),
+    edited: z.string().datetime(),
     url: z.string().url()
+});
+
+export const ApiResponseStarshipsSchema = z.object({
+    count: z.number(),
+    next: z.string().nullable(),
+    previous: z.string().nullable(),
+    results: z.array(StarshipSchema)
 });

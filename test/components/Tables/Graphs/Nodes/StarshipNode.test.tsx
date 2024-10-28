@@ -1,8 +1,8 @@
 import { render } from "vitest-browser-react";
 import { expect, test, vi, afterEach, describe, Mock } from "vitest";
 import { AppProvider } from "@components/App/AppProvider";
-import { StarshipNode } from "@components/Tables/Graphs/Nodes/StarshipNode";
-import { useFetchStarshipQuery } from "@api/api.slice";
+import { StarshipNode } from "@components/Graphs/Nodes/StarshipNode";
+import { useFetchStarshipQuery } from "@store/api/api.slice";
 
 type FetchStarshipQueryReturnType = ReturnType<typeof useFetchStarshipQuery>;
 

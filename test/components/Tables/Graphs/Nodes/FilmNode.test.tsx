@@ -1,8 +1,8 @@
 import { render } from "vitest-browser-react";
 import { expect, test, vi, afterEach, describe, Mock } from "vitest";
 import { AppProvider } from "@components/App/AppProvider";
-import { FilmNode } from "@components/Tables/Graphs/Nodes/FilmNode";
-import { useFetchFilmQuery } from "@api/api.slice";
+import { FilmNode } from "@components/Graphs/Nodes/FilmNode";
+import { useFetchFilmQuery } from "@store/api/api.slice";
 
 type FetchFilmQueryReturnType = ReturnType<typeof useFetchFilmQuery>;
 
