@@ -20,50 +20,85 @@ import { ButtonCell, ColorMarker, HeaderCell, HeroCell, TablePaper } from "./Sty
 import { TABLE_HEADERS } from "@utils/constants/hero.table.constants";
 import { useFetchHeroesQuery } from "@api/api.slice";
 import CloseIcon from "@mui/icons-material/Close";
+import { H3Typography } from "@components/Typography/Typography";
+import { FlexBox } from "@styles/StyledComponents/FlexBoxes";
+import { PrimaryButton } from "@components/Buttons/PrimaryButton";
 
 // Responsive table component for displaying heroes
 export const HeroTable: React.FC = () => {
-    const [page, setPage] = useState(0); // State for pagination
-    const [selectedHero, setSelectedHero] = useState<THero | null>(null); // State for selected hero details
-    const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth < 768); // State to track mobile view
-    const rowsPerPage = 10; // Number of rows per page
-    const { data, isLoading, isError } = useFetchHeroesQuery(page + 1); // Fetch heroes data from API
+    const urlParams = new URLSearchParams(window.location.search);
+    const initialPage = Math.max(1, Number(urlParams.get("page")) || 1);
 
-    // Effect to handle window resizing
+    const [page, setPage] = useState(initialPage);
+    const [selectedHero, setSelectedHero] = useState<THero | null>(null);
+    const [isMobile, setIsMobile] = useState<boolean>(window.innerWidth < 768);
+    const rowsPerPage = 10;
+
+    const { data, isLoading, isError } = useFetchHeroesQuery(page); // Page starts at 1
+
+    // Handle window resize for mobile view detection
     useEffect(() => {
-        const handleResize = () => {
-            setIsMobile(window.innerWidth < 768); // Update mobile state based on window width
-        };
+        const handleResize = () => setIsMobile(window.innerWidth < 768);
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
 
-        window.addEventListener("resize", handleResize); // Add resize event listener
-        return () => window.removeEventListener("resize", handleResize); // Clean up on unmount
+    // Sync page number with URL and check validity
+    useEffect(() => {
+        const maxPages = data ? Math.ceil(data.count / rowsPerPage) : 1;
+        if (data && (page < 1 || page > maxPages)) {
+            setPage(1); // Reset page to 1 if it's invalid
+            window.history.replaceState(null, "", "?page=1");
+        }
+    }, [data, page]);
+
+    // Handle URL navigation with history updates
+    useEffect(() => {
+        const handlePopState = () => {
+            const newPage = Math.max(1, Number(new URLSearchParams(window.location.search).get("page")) || 1);
+            setPage(newPage);
+        };
+        window.addEventListener("popstate", handlePopState);
+        return () => window.removeEventListener("popstate", handlePopState);
     }, []);
 
     // Function to handle page change
     const handleChangePage = (event: unknown, newPage: number) => {
         setPage(newPage);
+        window.history.pushState(null, "", `?page=${newPage}`);
     };
 
     // Function to handle hero selection
-    const handleListItemClick = (hero: THero) => {
-        setSelectedHero(hero); // Set the selected hero to open the dialog
-    };
+    const handleListItemClick = (hero: THero) => setSelectedHero(hero);
 
     // Function to close the dialog
-    const handleCloseDialog = () => {
-        setSelectedHero(null); // Close the dialog
-    };
+    const handleCloseDialog = () => setSelectedHero(null);
 
-    // Loading and error handling
+    // Render pagination if data is invalid or missing
+    const renderInvalidPageMessage = () => (
+        <FlexBox textAlign="center" p={2} sx={{ flexDirection: "column", gap: 4 }}>
+            <H3Typography>Unfortunately, this table page does not exist.</H3Typography>
+            <FlexBox>
+                <PrimaryButton
+                    onClick={() => {
+                        setPage(1), window.history.replaceState(null, "", "?page=1");
+                    }}
+                >
+                    Back to the table
+                </PrimaryButton>
+            </FlexBox>
+        </FlexBox>
+    );
+
+    // Loading, error, and no data handling
     if (isLoading) return <FullScreenLoader />;
-    if (isError) return <div>Error loading heroes!</div>;
-    if (!data) return <div>No data!</div>;
+    if (isError || !data) return renderInvalidPageMessage();
 
     return (
         <TablePaper>
             <TableContainer sx={{ minHeight: "50vh" }}>
                 <Table>
-                    {renderTableHeader(TABLE_HEADERS(isMobile))} {/* Render table header */}
+                    {renderTableHeader(TABLE_HEADERS(isMobile))}
                     <TableBody>
                         {data.results.map((hero: THero) => renderTableRow(hero, handleListItemClick, isMobile))}
                     </TableBody>
@@ -71,18 +106,18 @@ export const HeroTable: React.FC = () => {
             </TableContainer>
             <TablePagination
                 component="div"
-                count={data.count} // Total number of heroes
-                page={page} // Current page number
-                onPageChange={handleChangePage} // Function to handle page change
-                rowsPerPage={rowsPerPage} // Rows per page
-                rowsPerPageOptions={[]} // No options for rows per page
+                count={data.count}
+                page={page - 1} // Adjusting for zero-based index in TablePagination
+                onPageChange={(event, newPage) => handleChangePage(event, newPage + 1)}
+                rowsPerPage={rowsPerPage}
+                rowsPerPageOptions={[]} // No rows-per-page options
             />
 
-            {/* Dialog to show hero details */}
+            {/* Dialog for hero details */}
             {selectedHero && (
                 <Dialog open={Boolean(selectedHero)} onClose={handleCloseDialog} maxWidth="lg" fullWidth>
+                    <DialogTitle>Hero Details</DialogTitle>
                     <IconButton
-                        children={<CloseIcon />}
                         aria-label="close"
                         onClick={handleCloseDialog}
                         sx={{
@@ -91,10 +126,11 @@ export const HeroTable: React.FC = () => {
                             top: 2,
                             color: (theme) => theme.palette.grey[500]
                         }}
-                    />
-
+                    >
+                        <CloseIcon />
+                    </IconButton>
                     <DialogContent>
-                        <HeroGraph hero={selectedHero} /> {/* Render hero graph */}
+                        <HeroGraph hero={selectedHero} />
                     </DialogContent>
                 </Dialog>
             )}
@@ -102,53 +138,48 @@ export const HeroTable: React.FC = () => {
     );
 };
 
-// Function to render a single table row
+// Render a single table row
 const renderTableRow = (hero: THero, handleListItemClick: (hero: THero) => void, isMobile: boolean) => (
     <TableRow key={hero.id}>
         <ButtonCell>
-            <ListItemButton onClick={() => handleListItemClick(hero)}>
-                {validateField(hero.name)} {/* Display hero's name */}
-            </ListItemButton>
+            <ListItemButton onClick={() => handleListItemClick(hero)}>{validateField(hero.name)}</ListItemButton>
         </ButtonCell>
-        {/* Render height and mass cells only if not in mobile view */}
         {!isMobile && (
             <>
-                <HeroCell>{validateField(hero.height)}</HeroCell> {/* Display hero's height */}
-                <HeroCell>{validateField(hero.mass)}</HeroCell> {/* Display hero's mass */}
+                <HeroCell>{validateField(hero.height)}</HeroCell>
+                <HeroCell>{validateField(hero.mass)}</HeroCell>
             </>
         )}
         <HeroCell>
-            {validateField(hero.hair_color)} {/* Display hero's hair color */}
+            {validateField(hero.hair_color)}
             {hero.hair_color.toLowerCase() !== "none" &&
                 hero.hair_color.toLowerCase() !== "n/a" &&
-                renderColorMarkers(hero.hair_color)}{" "}
-            {/* Render color markers for hair color */}
+                renderColorMarkers(hero.hair_color)}
         </HeroCell>
         <HeroCell>
-            {validateField(hero.eye_color)} {/* Display hero's eye color */}
-            {hero.eye_color.toLowerCase() !== "unknown" && renderColorMarkers(hero.eye_color, true)}{" "}
-            {/* Render color markers for eye color */}
+            {validateField(hero.eye_color)}
+            {hero.eye_color.toLowerCase() !== "unknown" && renderColorMarkers(hero.eye_color, true)}
         </HeroCell>
     </TableRow>
 );
 
-// Function to render color markers for hair or eye color
+// Render color markers for hair or eye color
 const renderColorMarkers = (colors: string, isEyeColor = false) => {
     return colors
         .split(",")
         .map((color, index) => (
-            <ColorMarker key={index} color={getMappedColor(color, isEyeColor)} border={`1px solid black`} />
+            <ColorMarker key={index} color={getMappedColor(color, isEyeColor)} border="1px solid black" />
         ));
 };
 
-// Function to render the table header
+// Render the table header
 const renderTableHeader = (headers: string[]) => (
     <TableHead>
         <TableRow>
             {headers.map((header, index) => (
                 <HeaderCell key={index} sx={index === 0 ? { borderLeft: "none" } : {}}>
                     {header}
-                </HeaderCell> // Render each header cell
+                </HeaderCell>
             ))}
         </TableRow>
     </TableHead>

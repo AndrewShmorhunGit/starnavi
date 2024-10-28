@@ -13,12 +13,12 @@ export function App(): React.ReactNode {
     return (
         <PageContainer>
             {theme.palette.mode === "dark" && <StarrySky />}
+            <PageHeader />
             <PageWrapper>
-                <PageHeader />
                 <HeroTable />
-                <Footer />
             </PageWrapper>
             <CookieDialog />
+            <Footer />
         </PageContainer>
     );
 }
