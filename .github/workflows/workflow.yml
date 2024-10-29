@@ -24,7 +24,12 @@ jobs:
               run: npm cache clean --force
 
             - name: Install dependencies
-              run: npm ci
+              run: |
+                  if [ -f package-lock.json ]; then
+                    npm ci
+                  else
+                    npm install
+                  fi
 
             - name: Run Tests
               run: npm run test:ci
