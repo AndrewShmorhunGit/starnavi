@@ -1,4 +1,4 @@
-name: deploy web
+name: Deploy Web
 
 on:
     push:
@@ -9,33 +9,37 @@ on:
 jobs:
     deploy:
         runs-on: ubuntu-latest
+
         steps:
-            - uses: actions/checkout@v2
+            - name: Checkout repository
+              uses: actions/checkout@v3
 
-            - uses: actions/setup-node@v2
+            - name: Set up Node.js
+              uses: actions/setup-node@v3
               with:
-                  node-version: "20.17.0"
+                  node-version: "20.x"
+                  cache: "npm"
 
-            - name: Clear cache
+            - name: Clear npm cache
               run: npm cache clean --force
 
             - name: Install dependencies
-              run: npm install
+              run: npm ci
 
             - name: Run Tests
-              run: npm test
+              run: npm run test:ci
 
             - name: Build Website
               run: npm run build
 
-            - name: Set AWS credentials
-              uses: aws-actions/configure-aws-credentials@v1
+            - name: Configure AWS credentials
+              uses: aws-actions/configure-aws-credentials@v2
               with:
                   aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
                   aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
                   aws-region: eu-central-1
 
-            - name: Copy to S3
+            - name: Deploy to S3
               run: aws s3 sync ./dist/. s3://${{ secrets.AWS_S3_BUCKET }}
 
             - name: Invalidate CloudFront Cache
