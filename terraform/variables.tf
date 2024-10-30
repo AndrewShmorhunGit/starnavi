@@ -14,12 +14,6 @@ variable "s3_bucket_redirect" {
   type        = string
 }
 
-
-variable "ssl_certificate_arn" {
-  description = "The ARN of the ACM SSL certificate"
-  type        = string
-}
-
 variable "cloudfront_default_root" {
   description = "The default root object for CloudFront."
   type        = string

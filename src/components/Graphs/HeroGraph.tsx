@@ -2,20 +2,12 @@ import React, { useMemo } from "react";
 import { Box, useTheme } from "@mui/material";
 import ReactFlow, { MiniMap, Controls, Background } from "reactflow";
 import { THero } from "@utils/types/types";
-// import { useHeroGraphData } from "./hooks/useHeroGraphData";
-// import { LoadingSpinner } from "./components/LoadingSpinner";
-// import { ErrorMessage } from "./components/ErrorMessage";
-// import { NoFilmsMessage } from "./components/NoFilmsMessage";
-// import { createNodes } from "./utils/createNodes";
-// import { createEdges } from "./utils/createEdges";
-
-import "reactflow/dist/style.css";
 import { ErrorMessage } from "./Messages/ErrorMessage";
 import { LoadingSpinner } from "@components/Loaders/LaodingSpinner";
-import { NoFilmsMessage } from "./Messages/NoFilmsMessage";
 import { useHeroGraphData } from "./hooks/useHeroGrephData";
 import { createEdges } from "./Nodes/Edges";
 import { createNodes } from "./Nodes/Nodes";
+import "reactflow/dist/style.css";
 
 interface HeroGraphProps {
     hero: THero;

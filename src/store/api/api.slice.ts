@@ -3,6 +3,7 @@ import { ApiResponseFilmsSchema } from "@utils/schemas/films.schema";
 import { ApiResponseHeroesSchema } from "@utils/schemas/heros.schema";
 import { ApiResponseStarshipsSchema } from "@utils/schemas/starship.schema";
 import { ApiResponseFilmsType, ApiResponseStarshipsType, ApiResponseHeroesType } from "@utils/types/types";
+import { API_URL } from "../../configs/environment/env.config";
 
 const handleTransformFilmsResponseGET = (response: ApiResponseFilmsType): ApiResponseFilmsType => {
     return ApiResponseFilmsSchema.parse(response, { async: false });
@@ -14,7 +15,7 @@ const handleTransformStarshipsResponseGET = (response: ApiResponseStarshipsType)
 
 export const apiSlice = createApi({
     reducerPath: "api",
-    baseQuery: fetchBaseQuery({ baseUrl: "https://sw-api.starnavi.io" }),
+    baseQuery: fetchBaseQuery({ baseUrl: API_URL }),
     endpoints: (builder) => ({
         fetchHeroes: builder.query<ApiResponseHeroesType, number>({
             query: (page) => `/people/?page=${page}`,

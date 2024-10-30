@@ -1,57 +1,114 @@
-### STAGE 2
-
-resource "aws_cloudfront_origin_access_identity" "starnavi_identity" {
-  comment = "Identity for Starnavi CloudFront"
+resource "aws_cloudfront_origin_access_identity" "s3_origin_access_identity" {
+  comment = "Origin Access Identity for S3 bucket"
 }
 
-resource "aws_cloudfront_distribution" "starnavi_distribution" {
+resource "aws_cloudfront_distribution" "website_distribution" {
   origin {
-    domain_name = aws_s3_bucket.starnavi.bucket_regional_domain_name
-    origin_id   = "S3-Website"
+    domain_name = "${aws_s3_bucket.website_main.bucket}.s3-website.${var.aws_region}.amazonaws.com"
+    origin_id   = "S3OriginMain"
 
-    s3_origin_config {
-      origin_access_identity = aws_cloudfront_origin_access_identity.starnavi_identity.id
+    custom_origin_config {
+      origin_protocol_policy = "http-only"
+      origin_ssl_protocols   = ["TLSv1.2"]
+      http_port              = 80
+      https_port             = 443
     }
-  }
 
-  origin {
-    domain_name = aws_s3_bucket.redirect.bucket_regional_domain_name
-    origin_id   = "S3-Redirect"
-
-    s3_origin_config {
-      origin_access_identity = aws_cloudfront_origin_access_identity.starnavi_identity.id
-    }
   }
 
   enabled             = true
-  default_root_object = var.cloudfront_default_root
+  default_root_object = "index.html"
 
   default_cache_behavior {
-    target_origin_id = "S3-Website"
+  target_origin_id       = "S3OriginMain"
+  viewer_protocol_policy = "redirect-to-https"
 
-    viewer_protocol_policy = "redirect-to-https"
-    allowed_methods       = ["GET", "HEAD", "OPTIONS"]
-    cached_methods        = ["GET", "HEAD"]
-    forwarded_values {
-      query_string = false
-      cookies {
-        forward = "none"
-      }
+  allowed_methods = [
+    "GET",
+    "HEAD",
+    "OPTIONS",
+    "PUT",
+    "POST",
+    "PATCH",
+    "DELETE",
+  ]
+
+  cached_methods = ["GET", "HEAD"]
+
+  # Add this block to forward headers, cookies, and query strings (if needed)
+  forwarded_values {
+    query_string = false
+    cookies {
+      forward = "none"
     }
-
-    min_ttl     = 0
-    max_ttl     = 31536000
-    default_ttl = 86400
   }
+}
+
+  # Указываем альтернативные домены (CNAME)
+  aliases  = [var.s3_bucket_website]
+  
 
   viewer_certificate {
-    acm_certificate_arn = var.ssl_certificate_arn
+    acm_certificate_arn = aws_acm_certificate.domain_certificate.arn
     ssl_support_method  = "sni-only"
   }
 
-  tags = {
-    Name        = "Starnavi CloudFront Distribution"
-    Environment = var.tags_env
+  restrictions {
+    geo_restriction {
+      restriction_type = "none"
+    }
+  }
+}
+
+resource "aws_cloudfront_distribution" "redirect_distribution" {
+  origin {
+    domain_name = "${aws_s3_bucket.website_redirect.bucket}.s3-website.${var.aws_region}.amazonaws.com"
+    origin_id   = "S3OriginRedirect"
+
+    custom_origin_config {
+      origin_protocol_policy = "http-only"
+      origin_ssl_protocols   = ["TLSv1.2"]
+      http_port              = 80
+      https_port             = 443
+    }
+
+  }
+
+  enabled             = true
+  default_root_object = "index.html"
+
+  default_cache_behavior {
+  target_origin_id       = "S3OriginRedirect" # or "S3OriginRedirect" for the redirect distribution
+  viewer_protocol_policy = "redirect-to-https"
+
+  allowed_methods = [
+    "GET",
+    "HEAD",
+    "OPTIONS",
+    "PUT",
+    "POST",
+    "PATCH",
+    "DELETE",
+  ]
+
+  cached_methods = ["GET", "HEAD"]
+
+  # Add this block to forward headers, cookies, and query strings (if needed)
+  forwarded_values {
+    query_string = false
+    cookies {
+      forward = "none"
+    }
+  }
+}
+
+  # Указываем альтернативные домены (CNAME)
+  aliases  = [var.s3_bucket_redirect]
+  
+
+  viewer_certificate {
+    acm_certificate_arn = aws_acm_certificate.domain_certificate.arn
+    ssl_support_method  = "sni-only"
   }
 
   restrictions {
